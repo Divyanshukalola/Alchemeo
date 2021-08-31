@@ -1,0 +1,917 @@
+{% extends 'layouts/base.html' %}
+
+{% load mathfilters %}
+{% block title %} Inventory {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <!-- Header -->
+  
+    <main class="main-content mt-1 border-radius-lg">
+      <!-- Navbar -->
+        <!-- Navbar -->
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky " id="navbarBlur" data-scroll="true">
+          <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-sm">
+                  <a class="opacity-3 text-dark" href="javascript:;">
+                    <svg class="text-dark" width="12px" height="12px" viewBox="0 0 42 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                      <title>basket</title>
+                      <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g transform="translate(-1869.000000, -741.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                          <g transform="translate(1716.000000, 291.000000)">
+                            <g id="basket" transform="translate(153.000000, 450.000000)">
+                              <path class="color-background" d="M34.080375,13.125 L27.3748125,1.9490625 C27.1377583,1.53795093 26.6972449,1.28682264 26.222716,1.29218729 C25.748187,1.29772591 25.3135593,1.55890827 25.0860125,1.97535742 C24.8584658,2.39180657 24.8734447,2.89865282 25.1251875,3.3009375 L31.019625,13.125 L10.980375,13.125 L16.8748125,3.3009375 C17.1265553,2.89865282 17.1415342,2.39180657 16.9139875,1.97535742 C16.6864407,1.55890827 16.251813,1.29772591 15.777284,1.29218729 C15.3027551,1.28682264 14.8622417,1.53795093 14.6251875,1.9490625 L7.919625,13.125 L0,13.125 L0,18.375 L42,18.375 L42,13.125 L34.080375,13.125 Z" opacity="0.595377604"></path>
+                              <path class="color-background" d="M3.9375,21 L3.9375,38.0625 C3.9375,40.9619949 6.28800506,43.3125 9.1875,43.3125 L32.8125,43.3125 C35.7119949,43.3125 38.0625,40.9619949 38.0625,38.0625 L38.0625,21 L3.9375,21 Z M14.4375,36.75 L11.8125,36.75 L11.8125,26.25 L14.4375,26.25 L14.4375,36.75 Z M22.3125,36.75 L19.6875,36.75 L19.6875,26.25 L22.3125,26.25 L22.3125,36.75 Z M30.1875,36.75 L27.5625,36.75 L27.5625,26.25 L30.1875,26.25 L30.1875,36.75 Z"></path>
+                            </g>
+                          </g>
+                        </g>
+                      </g>
+                    </svg>
+                  </a>
+                </li>
+                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Instocks</a></li>
+                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Inventory</li>
+              </ol>
+              <h6 class="font-weight-bolder mb-0">Inventory</h6>
+            </nav>
+            <div class="sidenav-toggler sidenav-toggler-inner d-xl-block d-none ">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+              <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                <div class="input-group">
+                 
+                </div>
+              </div>
+              <ul class="navbar-nav  justify-content-end">
+                <li class="nav-item d-flex align-items-center">
+                  <a href="/Profile/" class="nav-link text-body font-weight-bold px-0">
+                    <i class="fa fa-user me-sm-1"></i>
+                    <span class="d-sm-inline d-none">{{request.user.username}}</span>
+                  </a>
+                </li>
+                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                  <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                    <div class="sidenav-toggler-inner">
+                      <i class="sidenav-toggler-line"></i>
+                      <i class="sidenav-toggler-line"></i>
+                      <i class="sidenav-toggler-line"></i>
+                    </div>
+                  </a>
+                </li>
+                <li class="nav-item px-3 d-flex align-items-center">
+                  <a href="javascript:;" class="nav-link text-body p-0">
+                   
+                  </a>
+                </li>
+                <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                  <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell cursor-pointer px-0"></i>
+                    <span class="badge badge-md badge-floating border-white mx-0 px-0" style="color: rgb(116, 116, 116); background-color: transparent;">{{request.user.inventory.accessrequest_set.all.count}}</span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                    {% if request.user.inventory.accessrequest_set.all%}
+                    {% for r in request.user.inventory.accessrequest_set.all%}
+                    <li class="mb-2">
+                      <a class="dropdown-item border-radius-md" >
+                        <div class="d-flex py-1" data-bs-toggle="modal" data-bs-target="#v{{r.Request_ID}}">
+                         
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="text-sm font-weight-normal mb-1">
+                              <span class="font-weight-bold">Request</span> from {{r.Request_from}}
+                            </h6>
+                            <p class="text-xs text-secondary mb-0">
+                              <i class="fa fa-clock me-1"></i>
+                              {{r.Request_date}}
+                            </p>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+    
+    
+    
+                 
+                    {% endfor %}
+                    {% else %}
+                    <li class="mb-2">
+                      <a class="dropdown-item border-radius-md">
+                        No Requests Pending ...
+                      </a>
+                    </li>
+                    {% endif %}
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+    {% for r in request.user.inventory.accessrequest_set.all%}
+<!-- Modal -->
+<div class="modal fade" id="v{{r.Request_ID}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div class="modal-dialog modal-dialog-centered" role="document">
+   <div class="modal-content">
+     <div class="modal-header">
+       <h5 class="modal-title" id="exampleModalLabel">Inventory Access Request</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+         <span aria-hidden="true">&times;</span>
+       </button>
+     </div>
+     <div class="modal-body">
+       <div class="d-flex flex-column justify-content-center">
+         <h6 class="text-sm font-weight-normal mb-1">
+           <span class="font-weight-bold">Request</span> from {{r.Request_from}}
+         </h6>
+         <p class="text-xs text-secondary mb-0">
+           <i class="fa fa-clock me-1"></i>
+           {{r.Request_date}}
+         </p>
+       </div>
+     </div>
+     <div class="modal-footer">
+       
+       <form action="/AccessRequest1/" method="post">
+         {% csrf_token %}
+         <input type="text" name="actionid" id="actionid" value="{{r.Request_ID}}" hidden>
+         <input type="text" name="action" id="action" value="accept" hidden>
+         <input type="text" name="page" value="Inventory_dashboard" hidden>
+       <button type="submit" class="btn bg-gradient-success">Accept Request</button>
+       </form>
+
+     <form action="/AccessRequest1/" method="post">
+       {% csrf_token %}
+       <input type="text" name="actionid" id="actionid" value="{{r.Request_ID}}" hidden>
+       <input type="text" name="action" id="action" value="delete" hidden>
+       <input type="text" name="page" value="Inventory_dashboard" hidden>
+     <button type="submit" class="btn bg-gradient-danger" >Delete</button>
+     </form>
+
+     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+     </div>
+   </div>
+ </div>
+</div>
+
+{% endfor %}
+      <!-- End Navbar -->
+      <div class="container-fluid py-4">
+        <div class="row">
+          <div class="col-xl-6 col-sm-6 mb-xl-0 mb-4">
+            <div class="card" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: pointer;">
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="numbers">
+                      <h6>Add New Item</h6>
+                      <h6 class="text-sm mb-0 text-capitalize font-weight-bold">
+                        List new items to your inventory!
+                      </h6>
+                    </div>
+                  </div>
+                  <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                      <i class="ni ni-tie-bow text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-sm-6 mb-xl-0 mb-4">
+            <div class="card" data-bs-toggle="modal" data-bs-target="#exampleModal2" style="cursor: pointer;">
+              <div class="card-body p-3">
+                <div class="row">
+                  <div class="col-8">
+                    <div class="numbers">
+                      <h6>Inventory Tags</h6>
+                      <h5 class="text-sm mb-0 text-capitalize font-weight-bold">Create new tags for your inventory!</h5>
+                    </div>
+                  </div>
+                  <div class="col-4 text-end">
+                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                      <i class="ni ni-tag text-lg opacity-10" aria-hidden="true"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- modals -->
+       
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="text-muted text-center">
+                  <small><b>Add new item in your inventory!</b></small>
+                  
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" style="color: black;">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="card-body px-lg-4" >
+                  <div class="text-center text-muted mb-4">
+                    <small>Fill out the product details. You can have maximum of two different prices. <b>Do not forget to mention the price tags.</b></small>
+                  </div>
+
+
+                  <hr class="mb-2 mt-2">
+                    <form action="/add_item/" method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <h6>Product Information: </h6>
+                      <div class="row">
+                        <div class="col-3 form-check mb-3">
+                          <input class="form-check-input" type="radio" name="goods" id="goods" checked>
+                          <label class="custom-control-label" for="customRadio1">Goods</label>
+                        </div>
+                        <div class="col-3 form-check">
+                          <input class="form-check-input" type="radio" name="services" id="services">
+                          <label class="custom-control-label" for="customRadio2">Services</label>
+                        </div>
+                      </div>
+                      <div class="row mb-0 mt-1">
+                        <div class="col-6">
+                          <label for="inputEmail4">Item Name:</label>
+                          <input type="text" class="form-control" id="productname" name="productname" placeholder="Item Name .." required>
+                        </div>
+                        <div class=" col-3">
+                          <label>Item ID: </label>
+                          
+                          <input type="text" class="form-control" id="productid" pattern="[a-zA-Z0-9-]+" style="text-transform:uppercase" name="productid" placeholder="Product ID .." autocomplete="off" required>
+                          
+                        </div>
+
+                        <div class=" col-3">
+                          <label>SKU Code: </label>
+                          
+                          <input type="text" class="form-control" id="skucode" pattern="[a-zA-Z0-9-]+" style="text-transform:uppercase" name="skucode" placeholder="SKU Code .." autocomplete="off">
+                          
+                        </div>
+                      </div>
+
+                      <div class="row mb-0">
+                        <div class="col">
+                          <label for="inputPassword4">Product Description:</label>
+                          <textarea id="Description" class="form-control" name="Description" rows="2" placeholder="Add your product description.. "></textarea>
+                        </div>
+
+                        <div class="col-6">
+                          <label for="exampleFormControlFile1">Upload the Product Image:</label>
+                          <input type="file" class="form-control" name="productimage" id="productimage">
+                        </div>
+                       
+                      </div>
+
+                    <div class="row mb-0">
+                      <div class="col-3">
+                        <label>Price per unit (₹):</label>
+                        <input type="number" class="form-control" id="ppu" name="ppu" value="0" placeholder="Price Per Unit" required>
+                      </div>
+
+                      <div class=" col-3">
+                        <label>Substitute Price (₹):</label>
+                        <input type="number" class="form-control" id="substituteprice" name="substituteprice" placeholder="Substitute Price" value="0">
+                      </div>
+
+                      <div class="col-md-6">
+                        <label>Unit :</label>
+                        <select class="form-control" id="unit" name="unit">
+                          <option selected>Each</option>
+                          <option>Hour</option>
+                          <option>Item</option>
+                          <option>Kilogram</option>
+                          <option>Piece</option>
+                          <option>Set</option>
+                        </select>
+                      </div>
+
+                     
+                    </div>
+
+
+                    <div class="row mb-0">
+                      <div class="col-md-3">
+                        <label>GST % (Example: 18 for 18%) :</label>
+                        <input type="number" class="form-control" id="gst" name="gst" placeholder="GST Percentage" max="100" value="0" required>
+                      </div>
+
+                      <div class="col-md-3">
+                        <label>Discount % (Example: 50 for 50%) :</label>
+                        <input type="number" class="form-control" id="discount" name="discount" placeholder="Discount" max="100" value="0" required>
+                      </div>
+                     
+
+                      <div class="col-6">
+                        <label >Stock :</label>
+                        <input type="number" class="form-control" id="stock" name="stock" placeholder="stock" required>
+                      </div>
+
+                    </div>
+                    <br>
+                    <h6>Tags: </h6>
+                    <div class="row">
+                      {% for t in tags %}
+                      <div class="col-3">
+                        <label style="text-transform: capitalize;">{{t.Tag_Title}} : {{t.Tag_description}}</label>
+                        <input type="number" class="form-control" id="tag{{t.Tag_Title}}" name="tag{{t.Tag_Title}}" placeholder="{{t.Tag_Title}} value" step="0.01" value="0">
+                      </div>
+                      {% endfor %}
+
+                    </div>
+                    <br>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn bg-gradient-primary">Save changes</button>
+                    </div>
+
+                    </form>
+
+
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <div class="text-muted text-center">
+                  <small><b>Mamange your Inventory Tags!</b></small>
+                  
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick="document.location.reload(true)">
+                  <span aria-hidden="true" style="color: black;">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="card-body px-lg-4" >
+                  <div class="text-center text-muted mb-4">
+                    <small>Fill out the tag details. You can have as many tags you like! <b>Do not forget to mention the Tag Title.</b></small>
+                    <small>Tags that you mention here will be <b>ONLY</b> used with Item Quantity!</small>
+                  </div>
+                  <hr>
+                
+                  <form action="/add_tag/" method="POST">
+                    {% csrf_token %}
+                    <div class="card">
+                      <div class="table-responsive">
+                    <table class="table align-items-center mb-0" id="tedit">
+                      <thead>
+                          <tr>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tag Title</th>
+                              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tag Description</th>
+                              
+                              
+                          </tr>
+                      </thead>
+                      <tbody id="tablebody">
+                        
+                        {% for t in tags %}
+                          <tr class="ml-5">
+                              <td>
+                                <div class="d-flex px-3 py-1">
+                                  <h6 class="mb-0 text-xs">{{forloop.counter}}</h6>
+                                </div>
+                              </td>
+                              <td>
+                                <input type="text" class='form-control Tags' name="TagName{{forloop.counter|sub:1}}" id="TagName{{forloop.counter|sub:1}}" value="{{t.Tag_Title}}" hidden>
+                                <div class="d-flex px-3 py-1">
+                                  <span>
+                                    <h6 class="mb-0 text-xs">{{t.Tag_Title}}</h6>
+                                  </span>
+                                </div> 
+                              </td>
+                              <td>
+                                <input type="text" class='form-control Tags' name="Tagd{{forloop.counter|sub:1}}" id="Tagd{{forloop.counter|sub:1}}" value="{{t.Tag_description}}" hidden>
+                                <div class="d-flex px-3 py-1">
+                                <span>
+                                  <h6 class="mb-0 text-xs">{{t.Tag_description}}</h6>
+                                </span> 
+                                </div>
+                              </td>
+                            
+                          </tr>
+                          
+                        {% endfor %}
+                       
+                 
+                      </tbody>
+                  </table>
+                  </div>
+                  </div>
+                  <br>
+
+                  <input type="number" id="numberofitems1" name="numberofitems1" value="0" hidden>
+
+                    <div id="editbuttons" hidden>
+                      <div class="row text-center">
+                        
+                        <div class="col-12">
+                          <button type="button" onclick="myCreateFunction2()" class="btn btn-secondary" style="text-align: center;"> Add new row</button>
+                          <button type="button" onclick="myDeleteFunction2()" class="btn btn-danger" style="text-align: center;"> Delete row</button>
+                        </div>
+                       
+                       
+                      </div>
+                      <div class="row text-center" style="z-index: 98;">
+                        <div class="col-12">
+                          <button type="submit" class="btn btn-primary"style="text-align: center;" value="Submit"> Save Tags</button>
+                  
+                        </div>
+                        
+                      </div>
+                    </div>
+
+
+
+
+
+
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn bg-gradient-primary" onclick="editTags();">Add Tags</button>
+                      
+                      <button type="button" class="btn bg-gradient-secondary" data-dismiss="modal" onClick="document.location.reload(true)">Close</button>
+                    </div>
+
+
+                    <!-- <div class="modal-footer">
+                      <button type="submit" class="btn bg-gradient-primary" onclick="editTags();">Add Tags</button>
+                      <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal" onclick="document.location.reload(true)">Close</button>
+                    </div> -->
+                  </form>
+
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+        <br>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <div class="input-group mb-4">
+                <span class="input-group-text"><i class="ni ni-zoom-split-in"></i></span>
+                <input class="form-control" placeholder="Search Items by ID" id="myInput" onkeyup="myFunction()" type="text">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card mb-4">
+              
+              <div class="card-header pb-0">
+                <div class="row">
+                  <div class="col-6">
+                    <h6>Inventory - {{SaleUser.SalesUser_Inventory.Inventory_ID}}</h6>
+                    <p class="text-sm">
+                      <span class="font-weight-bold">Total Item: </span> {{Inventory_products.count}}
+                    </p>
+                   
+                  </div>
+                  <div class="col-6 text-right">
+                    <button type="button" style="float: inline-end;" class="btn btn-danger float-right" data-bs-toggle="modal" data-bs-target="#deletemodal">Delete All Items</button>
+                  </div>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="deletemodal" tabindex="-1" role="dialog" aria-labelledby="deletemodal" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div class="text-muted text-center">
+                          <small><b>Please confirm if you want to delete all the items in you inventory!</b></small>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true" style="color: black;">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="text-center text-muted mb-4">
+                          <small><b>NOTE: </b>Items deleted will not be recovered! If you think you have clicked this button by mistake please click cancel.</small>
+                        </div>
+
+                        <div class="modal-footer">
+                          <a href="/DeleteItems"><button type="button" class="btn bg-gradient-danger">Delete Items</button></a>
+                          <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+
+
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="card-body px-0 pt-0 pb-2">
+                {% if Inventory_products %}
+                <div class="table-responsive p-0">
+                  <table class="table align-items-center mb-0" id="myTable">
+                    <thead>
+                      <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Name</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">MRP</th>
+                        <th class="text-right text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if Inventory_products != 0%}
+              {% for p in Inventory_products %}
+                      <tr data-bs-toggle="modal" data-bs-target="#p{{p.Product_ID}}" style="cursor: pointer;">
+                        <td>
+                          <div class="d-flex px-3 py-1">
+                            
+                            <div class="d-flex flex-column justify-content-center">
+                              
+                              <p class="text-xs text-secondary mb-0">{{forloop.counter}}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0">{{p.Product_name}}</p>
+                          <p class="text-xs text-secondary mb-0">Stock: {{p.Product_stock}}</p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <p class="text-xs font-weight-bold mb-0">{{p.Product_ID}}</p>
+                        </td>
+                        <td class="align-middle text-center">
+                          <span class="text-secondary text-xs font-weight-bold">₹{{p.Product_mrp}}</span>
+                        </td>
+                        <td class="text-right">
+                          <div>
+                            <img src="{{p.Product_image.url}}" class="avatar avatar-sm me-3">
+                          </div>
+                        </td>
+                      </tr>
+
+
+                      {% endfor %}
+                    {% else %}
+                    {% endif %}
+                     
+                    </tbody>
+                  </table>
+                </div>
+
+
+
+
+
+            {% if Inventory_products != 0%}
+            {% for p in Inventory_products %}
+
+            <!-- Modal -->
+            <div class="modal fade" id="p{{p.Product_ID}}" tabindex="-1" role="dialog" aria-labelledby="p{{p.Product_ID}}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{p.Product_name}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true" style="color: black;">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col">
+                        <img src="{{p.Product_image.url}}" alt="Raised image" class="img-fluid rounded shadow-lg" style="width: 250px;">
+                      </div>
+                      <div class="col">
+                        <h6>ID: {{p.Product_ID}}</h6>
+                        <p class="text-xs font-weight-bold mb-0"><b>Description: </b>{{p.Product_description}}</p>
+                   
+                    <hr class="mt-2 mb-2">
+                    <p class="text-sm font-weight-bold mb-0" style="color: black;"><b>MRP: ₹{{p.Product_mrp}}/-</b></p>
+                    <p class="text-sm font-weight-bold mb-0">
+                    <h6>{% if p.Product_sprice != 0 %}
+                      {{p.Product_sprice_tag}} price : ₹{{p.Product_sprice}}/-
+                      
+                      {% else %}
+                      {% endif %}</b></p>
+                      <p class="text-sm font-weight-bold mb-0"><b>GST: {{p.Product_gst_per}}%</b></p>
+                      <hr class="mt-1 mb-1">
+                      <div class="row">
+                      
+                        {% for pt in p.producttags_set.all %}
+                        <div class="col">
+                          <p class="text-sm font-weight-bold mb-0"><b>{{pt.Defined_Tags.Tag_Title}}: {{pt.Tag_value}}</b></p>
+                        </div>
+                        {% endfor %}
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#e{{p.Product_ID}}" class="btn bg-gradient-primary">Edit</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                    
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+
+            <!-- end -->
+            <div class="modal fade" id="e{{p.Product_ID}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content" style="overflow: scroll;">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Your Product</h5>
+                    <form action="/deleteProduct/" method="post">
+                      {% csrf_token %}
+                      <input type="text" name="itemid" id="itemid" value="{{p.Product_ID}}" hidden>
+                      <button type="submit" class="btn btn-danger my-2 text-right" >Delete</button>
+                    </form>
+                  </div>
+                  <div class="modal-body">
+                    <p class="text-sm font-weight-bold mb-0">Product Information:</P>
+                    <form action="/editProduct/" method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="row">
+                        <div class=" col-md-6">
+                          <label for="inputEmail4">Product Name:</label>
+                          <input type="text" class="form-control" id="productname" name="productname" value="{{p.Product_name}}" placeholder="Product Name .." required>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="inputPassword4">Product ID:</label>
+                          <input type="text" class="form-control" id="productid" pattern="[a-zA-Z0-9-]+" style="text-transform:uppercase" value="{{p.Product_ID}}" name="productid" placeholder="Product ID .." required>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="col-6">
+                            <label for="inputPassword4">Product Description:</label>
+                            <textarea id="Description" class="form-control" name="Description" rows="2" placeholder="Add your product description.. ">{{p.Product_description}}</textarea>
+                          </div>
+                          <div class="col-6">
+                            <label for="inputPassword4">Product Stock:</label>
+                            <input type="number" class="form-control" name="pstock" id="pstock" value="{{p.Product_stock}}" required>
+                          </div>
+                      </div>
+                      <br>
+
+                      <div class="row">
+                        <div class=" col-md-6">
+                          <label>MRP (₹):</label>
+                          <input type="number" class="form-control" value="{{p.Product_mrp}}" id="mrp" name="mrp" placeholder="MRP" required>
+                        </div>
+                        <div class="col-md-6">
+                          <label for="exampleFormControlFile1">Upload the Product Image:</label>
+                          <input type="file" class="form-control" name="productimage" value="{{p.Product_image}}" id="productimage">
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label >Substitute Price (₹):</label>
+                          <input type="number" class="form-control" id="substituteprice" value="{{p.Product_sprice}}" name="substituteprice" placeholder="Substitute Price">
+                        </div>
+
+                        <div class=" col-md-6">
+                          <label>GST % (Example: 18) :</label>
+                          <input type="number" class="form-control" value="{{p.Product_gst_per}}" id="gst" name="gst" max="100" placeholder="GST" required>
+                        </div>
+      
+                      </div>
+                      <hr>
+                      <p class="text-sm font-weight-bold mb-0">Tags:</P>
+                      <div class="row">
+                      {% for t in p.producttags_set.all %}
+                      
+                        <div class="col-md-3">
+                          <label>{{t.Defined_Tags.Tag_Title}} Value:</label>
+                          <input type="number" class="form-control" id="tag{{t.Defined_Tags.Tag_Title}}" value="{{t.Tag_value}}" name="tag{{t.Defined_Tags.Tag_Title}}" placeholder="Tag Value" step="0.01">
+                        </div>
+                      
+                      {% endfor %}
+                    </div>
+                    <br>
+                      
+                      
+    
+
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary my-4">Save Changes</button>              
+                        <button type="button" class="btn btn-secondary my-4" data-bs-dismiss="modal">Close</button>
+                      </div>
+                    </form>
+
+                 
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+              
+            <!-- End -->
+            {% endfor %}
+            {% else %}
+            {% endif %}
+
+
+
+
+
+
+
+
+
+
+                {% else %}
+                <h3 class="text-center" style="color: rgb(212, 212, 212); top: 50%; position: relative;">No Data Available!</h3>
+                <h5 class="text-center mb-5" style="color: rgb(212, 212, 212); top: 50%; position: relative;">Either you don't have access to this inventory or you need to add new items.</h5>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+       
+       
+      </div>
+
+      {% include "includes/footer.html" %}
+    </main>
+
+
+
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+<script>
+function myCreateFunction2() {
+      var count = parseInt(document.getElementById('numberofitems1').value) + 1;
+      document.getElementById('numberofitems1').setAttribute('value',parseInt(count));
+
+      var table = document.getElementById("tablebody");
+      var row = table.insertRow(-1);
+      var cell1 = row.insertCell(0);
+      var cell2 = row.insertCell(1);
+      var cell3 = row.insertCell(2);
+      
+      
+      var TagName = "TagName"+count
+      var Tagd = "Tagd"+count
+      
+
+      
+      cell1.innerHTML = "<td class='text-center border'>"+count+"</td>";
+      cell2.innerHTML = "<td class='border'><input type='text' class='form-control border' id='"+TagName+"' name='"+TagName+"' placeholder='Tag Name' style='text-transform: uppercase;' autocomplete='off'></td>";
+      
+      cell3.innerHTML = "<input type='text' class='form-control border' id='"+Tagd+"' name='"+Tagd+"' value='' placeholder='Quantity' autocomplete='off'>";
+     
+      // document.getElementById('Slide14549accStr2').addEventListener('keydown', tabnadd(event) {
+      //   if (event.keyCode == 9) {
+      //     event.preventDefault();
+      //     var elem = document.getElementById('Titleinformation_tb');
+      //     elem.focus();
+      //   }
+      // });
+
+
+      
+   
+    }
+
+
+    function myDeleteFunction2() {
+      
+      if(document.getElementById('tablebody').getElementsByTagName('tr').length >1){
+        document.getElementById("tedit").deleteRow(-1);
+        var count = document.getElementById('tablebody').getElementsByTagName('tr').length;
+      document.getElementById('numberofitems1').setAttribute('value',parseInt(count));
+      }
+      
+    }
+
+
+
+  function editTags(){
+    
+   
+   var x = document.getElementById('tablebody').getElementsByTagName('span');
+   var y = document.getElementsByClassName('Tags')
+   
+   document.getElementById('editbuttons').hidden = false;
+  
+
+   document.getElementById('numberofitems1').setAttribute('value',parseInt(document.getElementById('tablebody').getElementsByTagName('tr').length));
+
+   for (var i =0;i<=x.length;i++){
+     x[i].hidden = true;
+     if(i< y.length){
+       y[i].hidden = false;
+     }
+     
+   }
+   
+
+ }
+
+
+
+ $('.modal').on('hidden.bs.modal', function () {
+    // do something here
+    
+    var x = document.getElementById('tedit').getElementsByTagName('span');
+    var y = document.getElementsByClassName('Tags');
+    var rows = document.getElementById('tablebody').getElementsByTagName('tr');
+    
+    document.getElementById('editbuttons').hidden = true;
+    
+    
+
+    for (var i =0;i<=x.length;i++){
+      x[i].hidden = false;
+      if(i< y.length){
+        y[i].hidden = true;
+      }
+      
+    }
+
+
+    
+
+
+    
+});
+
+</script>
+
+
+<script>
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+
+       
+
+      td2 = tr[i].getElementsByTagName("td")[2];
+      if (td2) {
+        txtValue = td2.textContent || td2.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }  
+
+
+
+      
+      
+
+    }
+  }
+
+
+  </script>
+{% endblock javascripts %}
+
+
+
+
+
+<!-- <form action="/add_item/" method="POST">
+  {% csrf_token %} -->

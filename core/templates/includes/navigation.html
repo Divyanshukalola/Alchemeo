@@ -1,0 +1,91 @@
+
+    <!-- <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+      <div class="container-fluid">
+
+        <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="/">Dashboard</a>
+       
+        <ul class="navbar-nav align-items-center d-none d-md-flex">
+          <li class="nav-item dropdown">
+            <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="media align-items-center">
+                <span class="avatar avatar-sm rounded-circle" style="background-color: transparent;">
+                  <img alt="Image placeholder" src="{{ request.user.salesuser.Sales_User_image.url }}">
+                </span>
+                <div class="media-body ml-2 d-none d-lg-block">
+                  <span class="mb-0 text-sm  font-weight-bold" style="text-transform: capitalize;">
+                    {{ request.user.username }}
+                  </span>
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+              <div class=" dropdown-header noti-title">
+                <h6 class="text-overflow m-0">Welcome!</h6>
+              </div>
+              <a href="/Profile/" class="dropdown-item">
+                <i class="ni ni-single-02"></i>
+                <span>My profile</span>
+              </a>
+
+              <a href="/Messages/" class="dropdown-item">
+                <i class="ni ni-email-83"></i>
+                <span>Access Request</span>
+                {% if request.user.inventory.accessrequest_set.count > 0 %}
+                <span class="badge badge-primary ml-3">{{request.user.inventory.accessrequest_set.count}}</span>
+                {%else%}
+                {%endif%}
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="{% url 'logout' %}" class="dropdown-item">
+                <i class="ni ni-user-run"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav> -->
+
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          
+          <h6 class="font-weight-bolder mb-0">{% block title %} {% endblock %}</h6>
+          
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            
+          </div>
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+              
+                <i class="fa fa-user me-sm-1"></i>
+                <span class="d-sm-inline d-none">{{ request.user.username }}</span>
+              
+            </li>
+            <li class="nav-item d-xl-none ps-5 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item px-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+              </a>
+            </li>
+           
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+
+

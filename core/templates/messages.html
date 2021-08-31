@@ -1,0 +1,174 @@
+<!-- find "Change this" to find all the changes that are pending -->
+
+
+<!-- Read ME -->
+
+
+
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+{% csrf_token %}
+
+
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        <div class="header-body">
+          {% if messages%}
+          
+          {% for m in messages %}
+          
+
+                {% if m.tags == 'error' %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <span class="alert-inner--icon"><i class="ni ni-support-16"></i></span>
+                  <span class="alert-inner--text"><strong>Error!</strong> {{m}}</span>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              {% elif m.tags == 'warning' %}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <span class="alert-inner--icon"><i class="ni ni-bell-55"></i></span>
+                <span class="alert-inner--text"><strong>Warning!</strong> {{m}}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% elif m.tags == 'info' %}
+              <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <span class="alert-inner--icon"><i class="ni ni-bell-55"></i></span>
+                <span class="alert-inner--text"><strong>Info!</strong> {{m}}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% elif m.tags == 'success' %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <span class="alert-inner--icon"><i class="ni ni-like-2"></i></span>
+                <span class="alert-inner--text"><strong>Success!</strong> {{m}}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% endif %}
+            
+          
+          {% endfor%}
+         
+          {% endif%}
+         
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid mt--7" style="z-index: 98;">
+
+     
+
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0" style="height: auto; overflow: scroll;">
+              <h3 class="mb-0">Inventory Access Request</h3>
+              <hr>
+              <table class="table" style="width: 100% !important;">
+                <thead>
+                    <tr>
+                        <th class="text-center col-1">#</th>
+                        <th class="col-1">Request From</th>
+                        <th class="col-1">Inventory ID</th>
+                        <th class="col-1">Date</th>
+                        <th class="col-1">Actions</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in Messages %}
+                    <tr>
+                        <td class="text-center">{{forloop.counter}}</td>
+                        <td>{{m.Request_from.Sales_User.username}} - {{m.Request_from.SalesUser_ID}}</td>
+                        <td>{{m.Requested_Inventory.Inventory_ID}}</td>
+                        <td>{{m.Request_date}}</td>
+                        <td class="td-actions text-center">
+                            <div class="row">
+                                <div class="col-0 mr-2 ml-2">
+                                    <form action="/AccessRequest1/" method="post">
+                                        {% csrf_token %}
+                                        <input type="text" name="actionid" id="actionid" value="{{m.Request_ID}}" hidden>
+                                        <input type="text" name="action" id="action" value="accept" hidden>
+                                      <button type="submit" rel="tooltip" class="btn btn-info btn-icon btn-sm " data-original-title="" title="">
+                                        <i class="ni ni-check-bold pt-1"></i>
+                                      </button>
+                                    </form>
+                                </div>
+                                <div class="col-0">
+                                    <form action="/AccessRequest1/" method="post">
+                                        {% csrf_token %}
+                                        <input type="text" name="actionid" id="actionid" value="{{m.Request_ID}}" hidden>
+                                        <input type="text" name="action" id="action" value="delete" hidden>
+                                        
+
+                                      <button type="submit" rel="tooltip" class="btn btn-danger btn-icon btn-sm " data-original-title="" title="">
+                                        <i class="ni ni-fat-remove pt-1"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                              
+                            
+    
+                            </td>
+                       
+                    </tr>
+                  
+                  {% endfor %}
+
+                  
+                   
+                </tbody>
+                
+            </table>              
+            
+            </div>
+            
+          
+          </div>
+        </div>
+      </div>
+    
+    <!-- end of the form -->
+      
+      <br>
+
+      
+
+
+
+
+      
+
+      {% include "includes/footer.html" %}
+      
+
+    </div>
+
+
+    
+  
+    <div id="script">
+      
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+{% endblock javascripts %}
