@@ -599,13 +599,6 @@ def Messages(request):
 
 def save_invoice(request):
     if request.method == 'POST':
-
-        # for inv in request.user.salesuser.invoice_set.all():
-        #     if len(request.user.salesuser.invoice_set.filter(Invoice_ID=inv.Invoice_ID)) > 1:
-        #         pass
-        #     else:
-        #         pass
-
         status  = False
         check = False
         if request.POST.get('customCheck2') == 'on':
@@ -624,7 +617,7 @@ def save_invoice(request):
 
         if status == False:
             numberofitems = request.POST.get('numberofitems')
-            print("Status = New")
+            print(numberofitems,"xxxxxxxxxxxxxxxxx")
         
             Invoice_info = [
                 request.POST.get('InvoiceName').capitalize(),
@@ -639,22 +632,18 @@ def save_invoice(request):
            
             
             if Invoice_info[3] != '':
-                Invoices = request.user.salesuser.invoice_set.all().order_by('-Invoice_ID')
-                print(Invoices)
-
                 NewInvoice = Invoice(Invoice_Title=Invoice_info[0],
                                     Invoice_ContactInfo=Invoice_info[2],
                                     Invoice_member_ID=Invoice_info[1],
                                     Invoice_User=request.user.salesuser,
-                                    Invoice_ID = str(datetime.now().strftime('%y'))+"-"+str(int(datetime.now().strftime('%y'))+1)+"-"+str(int(Invoices[0].Invoice_ID.split('-')[2])+1),
+                                    Invoice_ID = str(datetime.now().strftime('%y'))+"-"+str(int(datetime.now().strftime('%y'))+1)+"-"+str(request.user.salesuser.invoice_set.all().count()+1),
                                     Invoice_Inventory = request.user.salesuser.SalesUser_Inventory,
                                     Invoice_Date = datetime.now(),
                                     Invoice_Total_Amount = Invoice_info[4],
                                     Invoice_SubTotal_Amount = Invoice_info[3],
                                     Invoice_gst_number = request.user.salesuser.Invoice_GST_no,
                                     Invoice_comments=Invoice_info[6],
-                                    Invoice_status = Invoice_info[7]
-                                    )
+                                    Invoice_status = Invoice_info[7])
 
                 NewInvoice.save()
 
@@ -665,60 +654,61 @@ def save_invoice(request):
                                             Tag_Invoice = NewInvoice,
                                             Tag_total = float(str(request.POST.get('tag'+tg.Tag_Title))))
                     tagtotal.save()
-
-                Inventory_products = request.user.salesuser.SalesUser_Inventory.product_set.all()
-            
-                for i in range(0,int(numberofitems)):
-            
-                    Quantity = 'Quantity'+str(i)
-                    Qprice = 'priceperQuantity'+str(i)
-                    ItemName = 'ItemName'+str(i)
-                    ItemID = request.POST.get(ItemName).split(' : ')
-                    print(request.POST.get(ItemName),"-------------------------------",i)
-                
-                    for p in Inventory_products:
-                        
-                        if (str(p.Product_ID) == str(ItemID[0])):
-                            if NewInvoice.invoiceitem_set.all().filter(Item_ID=ItemID[0]):
-                                updateItem = NewInvoice.invoiceitem_set.filter(Item_ID=ItemID[0])[0]
-                                updateItem.Item_Quantity = int(updateItem.Item_Quantity) + int(request.POST.get(Quantity))
-                                if p.Product_stock > 0:
-                                    updateItem.Item_stock = p.Product_stock - int(request.POST.get(Quantity))
-                                else:
-                                    updateItem.Item_stock = 0
-                                updateItem.save(update_fields=['Item_Quantity','Item_stock'])
-
-                            else:
-                                newItem = InvoiceItem(Item_Invoice = NewInvoice,
-                                                        Item_ID=p.Product_ID,
-                                                        Item_stock=p.Product_stock - int(request.POST.get(Quantity)),
-                                                        Item_name = p.Product_name,
-                                                        Item_gst = p.Product_gst_per,
-                                                        Item_Quantity=request.POST.get(Quantity),
-                                                        Item_price=request.POST.get(Qprice))
-                                
-                                if len(NewInvoice.Invoice_member_ID) == 9:
-                                    newItem.Member = True
-                                
-                                if p.Product_stock > 0:
-                                    newItem.save()
-                                    p.Product_stock = p.Product_stock - int(request.POST.get(Quantity))
-                                    p.save(update_fields=['Product_stock'])
-                                else:
-                                    p.Product_stock = 0
-                                    p.save(update_fields=['Product_stock'])
-                    
-                #ItemList.append([request.POST.get(ItemName),request.POST.get(Qprice),request.POST.get(Quantity),request.POST.get(Tprice)])
-
-                messages.success(request, f"Your Invoice '{NewInvoice.Invoice_Title} {NewInvoice.Invoice_ID}' was Successfully Created!")
                 
                 
             else:
-                pass
+                return redirect('main:Invoice_dashboard')
+            Inventory_products = request.user.salesuser.SalesUser_Inventory.product_set.all()
+            
+            for i in range(int(numberofitems)):
+            
+                Quantity = 'Quantity'+str(i)
+                Qprice = 'priceperQuantity'+str(i)
+                ItemName = 'ItemName'+str(i)
+                ItemID = request.POST.get(ItemName).split(':')
+                print(request.POST.get(ItemName),"-------------------------------",i)
+                
+
+
+                for p in Inventory_products:
+                    
+                    if (str(p.Product_ID) == str(ItemID[0])):
+                        if NewInvoice.invoiceitem_set.all().filter(Item_ID=ItemID[0]):
+                            updateItem = NewInvoice.invoiceitem_set.filter(Item_ID=ItemID[0])[0]
+                            updateItem.Item_Quantity = int(updateItem.Item_Quantity) + int(request.POST.get(Quantity))
+                            if p.Product_stock > 0:
+                                updateItem.Item_stock = p.Product_stock - int(request.POST.get(Quantity))
+                            else:
+                                updateItem.Item_stock = 0
+                            updateItem.save(update_fields=['Item_Quantity','Item_stock'])
+
+                        else:
+                            newItem = InvoiceItem(Item_Invoice = NewInvoice,
+                                                    Item_ID=p.Product_ID,
+                                                    Item_stock=p.Product_stock - int(request.POST.get(Quantity)),
+                                                    Item_name = p.Product_name,
+                                                    Item_gst = p.Product_gst_per,
+                                                    Item_Quantity=request.POST.get(Quantity),
+                                                    Item_price=request.POST.get(Qprice))
+                            
+                            if len(NewInvoice.Invoice_member_ID) == 9:
+                                newItem.Member = True
+                            
+                            if p.Product_stock > 0:
+                                newItem.save()
+                                p.Product_stock = p.Product_stock - int(request.POST.get(Quantity))
+                                p.save(update_fields=['Product_stock'])
+                            else:
+                                p.Product_stock = 0
+                                p.save(update_fields=['Product_stock'])
+                
+                #ItemList.append([request.POST.get(ItemName),request.POST.get(Qprice),request.POST.get(Quantity),request.POST.get(Tprice)])
+
+            messages.success(request, f"Your Invoice '{NewInvoice.Invoice_Title} {NewInvoice.Invoice_ID}' was Successfully Created!")
             return redirect('main:Invoice_dashboard')
         else:
-            print("Status = Edit")
             numberofitems = request.POST.get('numberofitems')
+            
             
             Invoice_info = [
                 request.POST.get('InvoiceName').capitalize(),
@@ -841,31 +831,20 @@ def add_item(request):
             image = request.FILES['productimage']
         except:
             image = False
-        typep = 'Goods'
-        if request.POST.get('goods'):
-            typep = 'Goods'
-        elif request.POST.get('services'):
-            typep = 'Services'
-        else:
-            pass
         data = [
-            request.POST.get('productname'), #0
-            request.POST.get('productid').upper(), #1
-            request.POST.get('skucode').upper(), #2
-            request.POST.get('ppu'), #3
-            request.POST.get('unit'), #4
+            request.POST.get('productname'),
+            request.POST.get('productid').upper(),
+            request.POST.get('mrp'),
             
-            request.POST.get('substituteprice'), #5
-            
-            request.POST.get('Description'), #7
-            request.POST.get('gst'), #8
-            request.POST.get('discount'), #9
-            request.POST.get('stock') #10
+            request.POST.get('substituteprice'),
+            request.POST.get('substitutepricetags'),
+            request.POST.get('Description'),
+            request.POST.get('gst'),
+            request.POST.get('stock')
             
         ]
         if request.user.salesuser.Inventory_access == False:
             messages.success(request, f"You don't have access to this inventory!")
-            return redirect('main:Inventory_dashboard')
 
         if image != False:
             product = Product(
@@ -873,16 +852,11 @@ def add_item(request):
                 Product_image = image,
                 Product_name = data[0],
                 Product_ID = data[1],
-                Product_mrp = data[3]+((data[8]/100)*data[3]),
-                Product_sprice = data[5],
-                Product_description = data[7],
-                Product_gst_per = data[8],
-                Product_stock = data[10],
-                Product_type = typep,
-                Product_SKU_Code = data[2],
-                Product_price_unit = data[3],
-                Product_discount = data[9],
-                Product_unit = data[4]
+                Product_mrp = data[2],
+                Product_sprice = data[3],
+                Product_description = data[5],
+                Product_gst_per = data[6],
+                Product_stock = data[7]
             )
             product.save()
             for t in request.user.salesuser.SalesUser_Inventory.definedtags_set.all():
@@ -897,16 +871,11 @@ def add_item(request):
                 Product_inventory = request.user.salesuser.SalesUser_Inventory,
                 Product_name = data[0],
                 Product_ID = data[1],
-                Product_mrp = int(data[3])+((int(data[8])/100)*int(data[3])),
-                Product_sprice = data[5],
-                Product_description = data[7],
-                Product_gst_per = data[8],
-                Product_stock = data[10],
-                Product_type = typep,
-                Product_SKU_Code = data[2],
-                Product_price_unit = data[3],
-                Product_discount = data[9],
-                Product_unit = data[4]
+                Product_mrp = data[2],
+                Product_sprice = data[3],
+                Product_description = data[5],
+                Product_gst_per = data[6],
+                Product_stock = data[7]
             )
             product.save()
             for t in request.user.salesuser.SalesUser_Inventory.definedtags_set.all():
@@ -1342,11 +1311,13 @@ def DeleteItems(request):
 
 
 
+
+
+@login_required(login_url="/login/")
 def html2pdf(request):
     
-    salesuser = SalesUser.objects.filter(SalesUser_ID=request.GET.get('salesuserid'))[0]
-    invoice = salesuser.invoice_set.filter(Invoice_ID=request.GET.get('invid'))[0]
-    list_product = salesuser.SalesUser_Inventory.product_set.all()
+    invoice = Invoice.objects.filter(Invoice_ID=request.POST.get('invid'))[0]
+    list_product = request.user.salesuser.SalesUser_Inventory.product_set.all()
 
     context = {'invoice':invoice,
                 'list_product':list_product}
@@ -1454,185 +1425,3 @@ class Pdf(View):
         context = {'invoice':invoice,
                 'list_product':list_product}
         return Render.render('html2pdf.html', context)
-
-
-
-
-
-def aboutus(request):
-  
-    context = {
-
-                }
-    context['segment'] = 'aboutus'
-
-    html_template = loader.get_template( 'aboutus.html' )
-    return HttpResponse(html_template.render(context, request))
-
-
-
-def invoices(request):
-  
-    Item_ID = []
-    Invoice_names = []
-    MemberID = []
-    Products = {}
-    list_product = request.user.salesuser.SalesUser_Inventory.product_set.all()
-
-    try:
-
-        if request.user.salesuser.Inventory_access:
-            Inventory_products = request.user.salesuser.SalesUser_Inventory.product_set.all()
-            for i in Inventory_products:
-                text = f"{i.Product_ID} : {i.Product_name}"
-                Item_ID.append(text[:50])
-                key = i.Product_ID+' : '+i.Product_name
-                
-                Products.update({key:[i.Product_mrp,
-                                        i.Product_sprice,
-                                        ((i.Product_gst_per/100)+1),
-                                        [str(t.Defined_Tags.Tag_Title)+"-"+str(t.Tag_value) for t in i.producttags_set.all()],
-                                        i.Product_stock]})
-    
-        else:
-            Inventory_products = 0
-        Invoices = request.user.salesuser.invoice_set.all().order_by('-Invoice_Date')
-        for i in Invoices:
-            Invoice_names.append(i.Invoice_Title)
-            MemberID.append(i.Invoice_member_ID)
-        
-    except:
-        Inventory_products = 0
-        Invoices = 0
-    
-    
-    SaleUser = request.user.salesuser
-
-
-
-    res = []
-    for i in MemberID:
-        if i not in res:
-            res.append(i)
-    
-    MemberID = res
-
-
-    res1 = []
-    for i in Invoice_names:
-        if i not in res1:
-            res1.append(i)
-    Invoice_names = res1
-
-
-
-
-    try:
-        Salesuser = request.user.salesuser
-
-    except:
-        inventory = Inventory(Inventory_user=request.user,
-                                    Inventory_name =request.user.username,
-                                    Inventory_ID=ran_gen(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"))
-        inventory.save()
-        Salesuser = SalesUser(Sales_User = request.user,Inventory_access=True,SalesUser_Inventory=inventory,SalesUser_ID= ran_gen(10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"))
-        Salesuser.save()
-
-        messages.info(request, f"Welcome to Alchemeo! Enjoy Billing!")
-
-    try:
-        
-        Inventory_items = request.user.salesuser.SalesUser_Inventory.product_set.all().count()
-    
-    except:
-        Inventory_c = 0
-        Inventory_items = 0
-
-    Invoices_c = Salesuser.invoice_set.all().count()
-    
-    Invoice_total = 0
-    
-    Invoices_values = [0,0,0,0,0,0,0,0,0,0,0,0]
-    Invoices_Number = [0,0,0,0,0,0,0,0,0,0,0,0]
-    todays_date = date.today()
-    Invoice_year = todays_date.year
-    TagsTot = {}
-    Items_sales = {}
-    Item_names = {}
-    confirmed = 0
-    pending = 0
-  
-
-    for tg in request.user.salesuser.SalesUser_Inventory.definedtags_set.all():
-        key = str(tg.Tag_Title)
-        TagsTot.update({key:0})
-    
-    for i in request.user.salesuser.invoice_set.all():
-        if i.Invoice_Total_Amount != 0:
-            Invoice_total = Invoice_total + i.Invoice_Total_Amount
-        
-        if i.Invoice_Date.year == Invoice_year:
-            Invoices_values[i.Invoice_Date.month-1]=float(Invoices_values[i.Invoice_Date.month-1]) + float(i.Invoice_Total_Amount)
-            Invoices_Number[i.Invoice_Date.month-1]=Invoices_Number[i.Invoice_Date.month-1] + 1
-        
-        if i.Invoice_status:
-            confirmed = confirmed +1
-        else:
-            pending = pending +1
-
-        for t in i.tagstotal_set.all():
-            TagsTot[t.Defined_Tags] = round(float(TagsTot[t.Defined_Tags]) + float(t.Tag_total),2)
-
-        for item in i.invoiceitem_set.all():
-            if item.Item_Quantity > 0:
-                total = 0
-                try:
-                    total = Items_sales[item.Item_ID] + item.Item_Quantity
-                except:
-                    total = item.Item_Quantity
-                
-                Items_sales.update({(item.Item_ID):total})
-        
-                
-            
-    sort = sort_dict_by_value(Items_sales, True)
-    IDS = []
-    SalesValues = []
-    stat1 = False
-    stat2 = False
-    for i in sort:
-        IDS.append(str(i))
-        SalesValues.append(sort[i])
-    
-    for i in Invoices_values:
-        if i > 0:
-            stat1 = True
-    
-    for i in Invoices_Number:
-        if i > 0:
-            stat2 = True
-        
-    followers = 0
-
-    for i in request.user.inventory.salesuser_set.all():
-        if i.Inventory_access:
-            followers = followers + 1
-
-        
-            
-
-
-    context = {'Inventory_products':Inventory_products,
-                'Invoices':Invoices,
-                'Item_ID_main':Item_ID,
-                'Invoice_names':Invoice_names,
-                'MemberID':MemberID,
-                'SaleUser':SaleUser,
-                'Products': Products,
-                'list_product':list_product,
-                'Invoices_values':Invoices_values,
-                'Invoices_Number':Invoices_Number}
-    context['segment'] = 'listinvoices'
-
-    html_template = loader.get_template( 'listinvoices.html' )
-    return HttpResponse(html_template.render(context, request))

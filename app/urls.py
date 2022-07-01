@@ -35,8 +35,6 @@ urlpatterns = [
     path('bankUpdate/', views.bankUpdate, name='bankUpdate'),
     path('ProfInfoUpdate/', views.ProfInfoUpdate, name='ProfInfoUpdate'),
     path('tocUpdate/', views.tocUpdate, name='tocUpdate'),
-    path('aboutus/', views.aboutus, name='aboutus'),
-    path('invoices/', views.invoices, name='invoices'),
 
 
 

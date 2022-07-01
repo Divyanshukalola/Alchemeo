@@ -7,21 +7,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils.html import strip_tags
-from django import forms
-import uuid, random, string
-
-
-def ran_gen(size, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for x in range(size))
-
-    # USE = "ran_gen(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")""
 
 # Create your models here.
 class Inventory(models.Model):
 
     Inventory_user = models.OneToOneField(User,on_delete=models.CASCADE, null=True)
     Inventory_name = models.CharField("Inventory Name",max_length=200,blank=True)
-    Inventory_ID = models.CharField("Inventory ID",max_length=8, default=ran_gen(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"), unique=True)
+    Inventory_ID = models.CharField("Inventory ID",max_length=8, default="ABCD1234", unique=True)
     Inventory_followers = models.IntegerField("Inventory Followers",default=0,blank=True)
 
     def __str__(self):
@@ -30,7 +22,7 @@ class Inventory(models.Model):
 class SalesUser(models.Model):
 
     Sales_User = models.OneToOneField(User,on_delete=models.CASCADE, null=True)
-    SalesUser_ID = models.CharField("Sales User ID",max_length=10, default=ran_gen(10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"), unique=True)
+    SalesUser_ID = models.CharField("Sales User ID",max_length=10, default="ABCDE12345", unique=True)
     SalesUser_Inventory = models.ForeignKey(Inventory,on_delete=models.DO_NOTHING, null=True)
     Invoice_GST_no = models.CharField("GST Number",max_length=20, default=' ', blank=True)
     # Invoice_GST_perc = models.IntegerField("Invoicne GST Percentage(eg: 10 for 10%)",default=18,blank=True)
@@ -47,81 +39,14 @@ class SalesUser(models.Model):
     def __str__(self):
         return strip_tags(f'{self.Sales_User} - {self.SalesUser_ID} ')
 
-class Customer(models.Model):
-
-    Sales_User = models.OneToOneField(SalesUser,on_delete=models.CASCADE, null=True)
-    Customer_fname = models.CharField("Customer First Name",max_length=200, null=True)
-    Customer_lname = models.CharField("Customer Last Name",max_length=200, null=True)
-    Customer_phone = models.CharField("Customer Phone",max_length=200, null=True)
-    Customer_email = models.CharField("Customer Email",max_length=200, null=True)
-    Customer_ID = models.CharField("Sales User ID",max_length=10, default=ran_gen(10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"), unique=True)
-    Customer_GST_no = models.CharField("GST Number",max_length=20, default=' ', blank=True)
-    Customer_image = models.ImageField(upload_to='Customer_image',default = 'sales_user_images/default_sales_user.png', height_field=None, width_field=None, max_length=100,blank=True)
-    Customer_Address = models.TextField("Address",blank=True)
-    Customer_info = models.TextField("Information",blank=True)
- 
-
-    def __str__(self):
-        return strip_tags(f'{self.Customer_lname} - {self.Customer_ID} ')
-
-class UserBusiness(models.Model):
-
-    Sales_User = models.OneToOneField(SalesUser,on_delete=models.CASCADE, null=True)
-
-    GSTIN_Number = models.CharField("GSTIN Number",max_length=500, null=True)
-    PhoneNumber = models.CharField("Phone Number",max_length=500, null=True)
-    Email = models.EmailField("Primary Email",max_length=500, null=True)
-    Add_line_1 = models.CharField("Address Line 1",max_length=500, null=True)
-    Add_line_2 = models.CharField("Address Line 2",max_length=500, null=True)
-    Pin_Code = models.CharField("Pin Code",max_length=500, null=True)
-    City = models.CharField("City",max_length=500, null=True)
-    State = models.CharField("State",max_length=500, null=True)
-    State_Code = models.CharField("State Code",max_length=500, null=True)
-   
-
-    def __str__(self):
-        return strip_tags(f'{self.Sales_User} - {self.GSTIN_Number} ')
-
-class UserPayment(models.Model):
-
-    Sales_User = models.OneToOneField(SalesUser,on_delete=models.CASCADE, null=True)
-
-    Accnt_holder_name = models.CharField("Account Holder Name",max_length=500, null=True)
-    Accnt_number = models.CharField("Account Number",max_length=500, null=True)
-    Bank_Name = models.CharField("Bank Name",max_length=500, null=True)
-    IFSC_Code = models.CharField("IFSC Code",max_length=500, null=True)
-   
-    def __str__(self):
-        return strip_tags(f'{self.Sales_User} - {self.Accnt_number} ')
-
 class Product(models.Model):
-
-    P_type = [('G', 'Goods'),('S', 'Services'),]
-    P_unit = [
-        ('Each', 'Each'),
-        ('Hour', 'Hour'),
-        ('Item', 'Item'),
-        ('Kg', 'Kilogram'),
-        ('Piece', 'Piece'),
-        ('Set', 'Set'),
-    ]
-    Product_type = models.CharField("Product Type",max_length=200,choices=P_type,default=P_type[0])
-
+    
     Product_inventory = models.ForeignKey(Inventory,on_delete=models.CASCADE, null=True)
     Product_description = models.TextField(blank=True)
     Product_image = models.ImageField(upload_to='product_images',default = 'product_images/default_product.png', height_field=None, width_field=None, max_length=100,blank=True)
     Product_name = models.CharField("Product Name",max_length=200,blank=False)
-    Product_ID = models.CharField("Product ID(HSN/SAC Code)",max_length=6, default=ran_gen(6, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"),blank=False)
-
-    Product_SKU_Code = models.CharField("Product SKU Code",max_length=30,blank=True, null=True)
-    
-    
+    Product_ID = models.CharField("Product ID",max_length=6, default="AB1000",blank=False)
     Product_mrp = models.IntegerField("Product MRP",default=0,blank=False)
-    Product_price_unit = models.IntegerField("Product Price Per Unit",default=0,blank=False)
-    Product_discount = models.IntegerField("Product discount",default=0,blank=False)
-    Product_unit = models.CharField("Product Unit",max_length=200,choices=P_unit,default=P_unit[0])
-    
-
     Product_sprice = models.IntegerField("Product Substitute Price",default=0,blank=True)
     Product_sprice_tag = models.CharField("Product Substitute Price tag (Make sure to have commong Product tag)",max_length=200,blank=True, default="Member")
     Product_gst_per = models.IntegerField("Product GST percentage:",default=0,blank=True)
@@ -144,7 +69,7 @@ class Invoice(models.Model):
     Invoice_comments = models.TextField("Invoice Comments",blank=True)
     Invoice_status = models.BooleanField(default=True)
     Invoice_reference = models.CharField("Invoice Reference Number",max_length=500, blank=True)
- 
+    
 
     def __str__(self):
         return strip_tags(f'{self.Invoice_ID} - {self.Invoice_Date} ')

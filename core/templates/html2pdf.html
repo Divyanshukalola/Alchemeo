@@ -24,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   <title>
-    Powered by Stockvoice
+    Alchemeo - {% block title %} {% endblock %}
   </title>
 
   <!-- Favicon - loaded as static -->
@@ -107,7 +107,7 @@
 
 </head>
 
-<body class="g-sidenav-show bg-white h-100">
+<body class="g-sidenav-show bg-gray-100 h-100">
   
 
     <div >
@@ -125,44 +125,8 @@
               <!-- <h4 > Title : {{i.Invoice_Title}} {% if i.Invoice_member_ID %} - {{i.Invoice_member_ID}} {% else %}{% endif%}</h4> -->
                   <!-- <hr class="mt-2 mb-3"> -->
                   <div class="row">
-                    <div class="col-6">
+                    <div class="col-11">
                       <img src="{{invoice.Invoice_User.Sales_User_image.url}}" alt="" width="100px" class=" mb-0">
-                    </div>
-                    <div class="col-6 text-right">
-                      <!-- <img id="qrcode" src="https://chart.googleapis.com/chart?cht=qr&chl=Instocks&chs=130x130&chld=L|0" class="qr-code img-responsive" /> -->
-                     <div>
-                      <canvas id="qr-code"></canvas>
-                     </div>
-                      
-                      <div id="test">
-                      
-                      </div>
-
-
-
-
-                  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-
-                  <script>
-                    /* JS comes here */
-                    var qr;
-                    var url =  document.URL;
-                    (function() {
-                                  qr = new QRious({
-                                  element: document.getElementById('qr-code'),
-                                  size: 120,
-                                  value: url
-                              });
-                          })();
-                          
-                        
-                  </script>
-
-
-                      <script>
-                     
-                        document.getElementById('qrcode').src = 'https://chart.googleapis.com/chart?cht=qr&chl=' + document.URL +'&chs=130x130&chld=L|0';
-                      </script>
                     </div>
                    
                   </div>
@@ -172,20 +136,20 @@
                 <div class="col-8">
                   
 
-                  <h6 class="text-sm">Name: {{invoice.Invoice_Title}}</h6>
-                  <h6 class="text-sm">Invoice ID: {{invoice.Invoice_ID}}</h6>
+                  <h6>Name: {{invoice.Invoice_Title}}</h6>
+                  <h6>Invoice ID: {{invoice.Invoice_ID}}</h6>
                   {% if invoice.Invoice_member_ID != '' %}
-                  <h6 class="text-sm">Member ID: {{invoice.Invoice_member_ID}}</h6>
+                  <h6>Member ID: {{invoice.Invoice_member_ID}}</h6>
                     {% else %}
-                    <h6 class="text-sm">Member ID: N/A</h6>
+                    <h6>Member ID: N/A</h6>
                     {% endif %}
     
                   
                   <!-- <h6>Invoice Created by: <span style="text-transform: capitalize;">{{i.Invoice_User.Sales_User.username}}</span> - {{i.Invoice_User.SalesUser_ID}}</h6> -->
                   {% if invoice.Invoice_ContactInfo != '' %}
-                  <h6 class="text-sm">Contact Information :  {{invoice.Invoice_ContactInfo}}</h6>
+                  <h6>Contact Information :  {{invoice.Invoice_ContactInfo}}</h6>
                     {% else %}
-                    <h6 class="text-sm">Contact Information :  N/A</h6>
+                    <h6>Contact Information :  N/A</h6>
                     {% endif %}
                 </div>
 
@@ -199,17 +163,15 @@
                   }
                 </style>
 
-<div class="col-4 h6 text-xs" id="address">
-  <p>Sales User ID: {{invoice.Invoice_User.SalesUser_ID}}</p>
-  <p>Address:</p>
-  <p class="text-sm mt-0">{{invoice.Invoice_User.SalesUser_Address|linebreaks}}</p>
-  
-</div>
+                <div class="col-4 h6" id="address">
+                  <p>{{invoice.Invoice_User.SalesUser_Address|linebreaks}}</p>
+                  
+                </div>
               </div>
              
               
               <hr class="mt-0 mb-2">
-              <h6 class="text-sm">Time Stamp :  {{invoice.Invoice_Date}}</h6>
+              <h6>Time Stamp :  {{invoice.Invoice_Date}}</h6>
               <div class="table-responsive">
               <table class="table align-items-center table-flush" id="tedit{{invoice.Invoice_ID}}">
                 <thead>
@@ -226,9 +188,9 @@
                 </thead>
                 <tbody id="tablebody{{i.Invoice_ID}}">
                   {% for x in invoice.invoiceitem_set.all %}
-                    <tr class="border">
-                        <td class="text-center h6 mb-0 text-xs border">{{forloop.counter}}</td>
-                        <td class="border" >
+                    <tr>
+                        <td class="text-center h6 mb-0 text-xs">{{forloop.counter}}</td>
+                        <td >
                           <input type="text" class='form-control inp{{i.Invoice_ID}} ItemName1' name="ItemName1{{i.Invoice_ID}}{{x.Item_ID}}" id="ItemName1{{i.Invoice_ID}}{{x.Item_ID}}" value="{{x.Item_ID}} : {{x.Item_name}}" hidden><span id="field" class="h6 mb-0 text-xs">{{x.Item_ID}} : {{x.Item_name}}</span>
                           <div class="row px-2 h6 mb-0 text-xs">
                             {% for p in list_product %}
@@ -247,8 +209,8 @@
                           </div>
                         </td>
 
-                        <td class="text-right border"><input type="text" class='form-control inp{{i.Invoice_ID}} Quantity1' name="Quantity1{{i.Invoice_ID}}{{x.Item_ID}}" id="Quantity1{{i.Invoice_ID}}{{x.Item_ID}}" value="{{x.Item_Quantity}}" hidden><span id="field" class="h6 mb-0 text-xs">{{x.Item_Quantity}}</span></td>
-                        <td class="text-right border"><input type='number' class='form-control priceperQuantityg1{{i.Invoice_ID}}' id="priceperQuantityg1{{i.Invoice_ID}}{{x.Item_ID}}" name="priceperQuantityg1{{i.Invoice_ID}}{{x.Item_ID}}" placeholder='Price with GST' hidden><input type="text" class='form-control inp{{i.Invoice_ID}} priceperQuantity1' name="priceperQuantity1{{i.Invoice_ID}}{{x.Item_ID}}" id="priceperQuantity1{{i.Invoice_ID}}{{x.Item_ID}}" value="{{x.Item_price}}" hidden><span id="field" class="h6 mb-0 text-xs">{{x.Item_price}}</span>
+                        <td class="text-right "><input type="text" class='form-control inp{{i.Invoice_ID}} Quantity1' name="Quantity1{{i.Invoice_ID}}{{x.Item_ID}}" id="Quantity1{{i.Invoice_ID}}{{x.Item_ID}}" value="{{x.Item_Quantity}}" hidden><span id="field" class="h6 mb-0 text-xs">{{x.Item_Quantity}}</span></td>
+                        <td class="text-right "><input type='number' class='form-control priceperQuantityg1{{i.Invoice_ID}}' id="priceperQuantityg1{{i.Invoice_ID}}{{x.Item_ID}}" name="priceperQuantityg1{{i.Invoice_ID}}{{x.Item_ID}}" placeholder='Price with GST' hidden><input type="text" class='form-control inp{{i.Invoice_ID}} priceperQuantity1' name="priceperQuantity1{{i.Invoice_ID}}{{x.Item_ID}}" id="priceperQuantity1{{i.Invoice_ID}}{{x.Item_ID}}" value="{{x.Item_price}}" hidden><span id="field" class="h6 mb-0 text-xs">{{x.Item_price}}</span>
                           <div class="row px-2">
                             {% for p in list_product %}
                               {% if p.Product_ID == x.Item_ID %}
@@ -270,12 +232,12 @@
                           </div>
                         </td>
                         
-                        <td class="text-right Unhideprint border" hidden><span id="field" class="Unhideprint h6 mb-0 text-xs">{{x.Item_gst}}</span></td>
-                        <td class="text-right mr-3 border">
+                        <td class="text-right Unhideprint" hidden><span id="field" class="Unhideprint h6 mb-0 text-xs">{{x.Item_gst}}</span></td>
+                        <td class="text-right mr-3">
                         {% if x.Member %}
-                          <input type='number' class='form-control price1g' id='priceg{{i.Invoice_ID}}' name="priceg{{i.Invoice_ID}}" placeholder='Total Price With GST' hidden><input type="text" class='form-control inp{{i.Invoice_ID}} price2' name="price1{{i.Invoice_ID}}" id="price1{{i.Invoice_ID}}" value="{%widthratio x.Item_price 1 x.Item_Quantity%}" hidden><span id="field1" class="h6 mb-0 text-xs"> ₹ {%widthratio x.Item_price 1 x.Item_Quantity%}</span>
+                          <input type='number' class='form-control price1g' id='priceg{{i.Invoice_ID}}' name="priceg{{i.Invoice_ID}}" placeholder='Total Price With GST' hidden><input type="text" class='form-control inp{{i.Invoice_ID}} price2' name="price1{{i.Invoice_ID}}" id="price1{{i.Invoice_ID}}" value="{%widthratio x.Item_price 1 x.Item_Quantity%}" hidden><span id="field1" class="h6 mb-0 text-xs"> Rs {%widthratio x.Item_price 1 x.Item_Quantity%}</span>
                         {% else %}
-                        <input type='number' class='form-control price1g' id='priceg{{i.Invoice_ID}}' name="priceg{{i.Invoice_ID}}" placeholder='Total Price With GST' hidden><input type="text" class='form-control inp{{i.Invoice_ID}} price2' name="price1{{i.Invoice_ID}}" id="price1{{i.Invoice_ID}}" value="{%widthratio x.Item_price 1 x.Item_Quantity%}" hidden><span id="field1" class="h6 mb-0 text-xs">₹ {%widthratio x.Item_price 1 x.Item_Quantity%}</span>
+                        <input type='number' class='form-control price1g' id='priceg{{i.Invoice_ID}}' name="priceg{{i.Invoice_ID}}" placeholder='Total Price With GST' hidden><input type="text" class='form-control inp{{i.Invoice_ID}} price2' name="price1{{i.Invoice_ID}}" id="price1{{i.Invoice_ID}}" value="{%widthratio x.Item_price 1 x.Item_Quantity%}" hidden><span id="field1" class="h6 mb-0 text-xs">Rs {%widthratio x.Item_price 1 x.Item_Quantity%}</span>
                         {% endif %}
 
                         
@@ -300,17 +262,17 @@
 
             <div class="row">
               <div class="col">
-                <h6 class="text-sm">Comments:</h6>
-                <p class="h6 text-sm" style="text-decoration: none;">{{invoice.Invoice_comments}}</p>
+                <h6>Comments:</h6>
+                <p class="h6" style="text-decoration: none;">{{invoice.Invoice_comments}}</p>
                 
               
               </div>
               <div class="col">
-                <h6 class="text-sm">Status:</h6>
+                <h6>Status:</h6>
                 {% if invoice.Invoice_status %}
-              <h6 class="text-sm" style="text-decoration: none; size: 10px; color: #28a745;">Confirmed</h6>
+              <h6 style="text-decoration: none; size: 10px; color: #28a745;">Confirmed</h6>
               {% else %}
-              <h6 class="text-sm" style="text-decoration: none; size: 10px; color: #dc3545;">Pending</h6>
+              <h6 style="text-decoration: none; size: 10px; color: #dc3545;">Pending</h6>
               {% endif %}
               </div>
               
@@ -319,11 +281,11 @@
             
             <div class="row">
               <div class="col-6">
-                <h6 class="text-sm">Sub Total: ₹ <span id='subtotal1' style="font-weight: bold;">{{invoice.Invoice_SubTotal_Amount}}</span> <input type="number" name="SubTotal" id="SubTotal" hidden></h6>
+                <h6>Sub Total: Rs <span id='subtotal1' style="font-weight: bold;">{{invoice.Invoice_SubTotal_Amount}}</span> <input type="number" name="SubTotal" id="SubTotal" hidden></h6>
                 {% if invoice.Invoice_gst_number != ' ' %}
-                <h6 class="text-sm">GST Number: {{invoice.Invoice_gst_number}}</h6>
+                <h6>GST Number: {{invoice.Invoice_gst_number}}</h6>
                 {% else %}
-                <h6 class="text-sm">GST Number: N/A</h6>
+                <h6>GST Number: N/A</h6>
                 {% endif %}
     
                 
@@ -334,56 +296,48 @@
                   {% for tg in invoice.tagstotal_set.all %}
                   
                     <div class="col-5">
-                      <h6 class="text-sm"><b>{{tg.Defined_Tags}}:</b>  {{tg.Tag_total}}</h6>
+                      <h6><b>{{tg.Defined_Tags}}:</b>  {{tg.Tag_total}}</h6>
                   </div>
                   {% endfor %}
                 </div>
               </div>
              
             </div>
-            <h6 class="border p-3 text-sm" style="width: auto;text-align: center;">Total(with GST): ₹ <span id='total1' style="font-weight: bold;">{{invoice.Invoice_Total_Amount}}</span> <input type="number" name="FinalTotal" id="FinalTotal" hidden></h6>
-            <div class="row" style="page-break-after:always;">
-              {% if request.user.salesuser.Sales_User_include_bnkdetails %}
-              <hr class="mt-3 mb-2">
-              <div class="col-12">
-                <div class="row">
+            <h6 class="border p-3" style="width: auto;text-align: center;">Total(with GST): Rs <span id='total1' style="font-weight: bold;">{{invoice.Invoice_Total_Amount}}</span> <input type="number" name="FinalTotal" id="FinalTotal" hidden></h6>
+           <hr class="mt-3 mb-2">
+           <div class="row">
+            {% if request.user.salesuser.Sales_User_include_bnkdetails %}
+            <div class="col-12">
+              <div class="row">
+                <div class="h6 text-sm">
+                  Our Bank Details
+                </div>
+                <div class="col"> 
                   <div class="h6 text-sm">
-                    Our Bank Details
+                    Bank Name: {{request.user.salesuser.Sales_User_bnk_name}}
                   </div>
-                  <div class="col"> 
-                    <div class="h6 text-sm">
-                      Bank Name: {{request.user.salesuser.Sales_User_bnk_name}}
-                    </div>
-                    
-                  </div>
-                  <div class="col">
-                    <div class="h6 text-sm">
-                      IFS/NEFT Code: {{request.user.salesuser.Sales_User_bnk_code}}
-                     </div>
-                  </div>
-                  <div class="col">
-                    <div class="h6 text-sm">
-                      A/c No: {{request.user.salesuser.Sales_User_bnk_accnt_no}}
-                    </div>
+                  
+                </div>
+                <div class="col">
+                  <div class="h6 text-sm">
+                    IFS/NEFT Code: {{request.user.salesuser.Sales_User_bnk_code}}
+                   </div>
+                </div>
+                <div class="col">
+                  <div class="h6 text-sm">
+                    A/c No: {{request.user.salesuser.Sales_User_bnk_accnt_no}}
                   </div>
                 </div>
-               
               </div>
-              {% else %}
-              {% endif%}
+             
             </div>
-            
-            
-            {% if request.user.salesuser.Sales_User_Terms_condition %}
-            <hr class="mt-3 mb-2">
-            <p class="text-xxs printtoc"><b>Terms and Conditions: </b> {{request.user.salesuser.Sales_User_Terms_condition}}</p>
-
-            <div class="noprint">
-              <br><br><br><br><br><br><br><br><br>
-            </div>
-          
             {% else %}
             {% endif%}
+          </div>
+          
+          <hr class="mt-3 mb-2">
+          <p class="text-xxs printtoc"><b>Terms and Conditions: </b> {{request.user.salesuser.Sales_User_Terms_condition}}</p>
+       
             
             </div>
 
@@ -397,63 +351,6 @@
           </div>
         </div>
       </div>
-
-
-  <button style="position: fixed; top: 93%; left: 95%;" type="button" onclick="window.print()" class="btn btn-secondary text-center noprint">
-    <i style="color: white;" class="fas fa-print"></i>
-  </button>
- 
-
-
-      
-
-
-<style>
-  @media print {
-
-    #printSection, #printSection * {
-        visibility:visible;
-    }
-    #printSection {
-        position:absolute;
-        left:0;
-        top:0;
-        width: 100%;
-        height: 99%;
-        margin-top: 50px;
-        page-break-after:auto;
-        
-    }
-    .noprint{
-       display:none;
-   }
-
-   .printimg{
-    margin-top: 0px;
-    margin-bottom: 0px;
-   }
-   .printtoc{
-    font-size: 1px;
-    color: #7a857d;
-   }
-
-   .printinfo{
-    font-size: 10px;
-   }
-
-
-   .Unhideprint
-    {
-      visibility:visible;
-    }
-}
-</style>
-
-
-
-
-
-
 
 
 

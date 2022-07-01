@@ -347,10 +347,8 @@ function toggleSidenav() {
     body.classList.remove(className);
     setTimeout(function() {
       sidenav.classList.remove('bg-white');
-      
     }, 100);
     sidenav.classList.remove('bg-transparent');
-    iconSidenav.classList.remove('d-none');
 
   } else {
     body.classList.add(className);
@@ -398,3 +396,18 @@ function sidenavTypeOnResize() {
 
 
 
+
+function nightMode(el) {
+  
+
+
+  let classes = ['position-sticky', 'blur', 'shadow-blur', 'mt-4', 'left-auto', 'top-1', 'z-index-sticky'];
+  const navbar = document.getElementById('navbarBlur');
+
+  if (!el.getAttribute("checked")) {
+    var element = document.body;
+    element.classList.toggle("dark-mode");
+  } else {
+    
+  }
+};
